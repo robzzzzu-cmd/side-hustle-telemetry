@@ -56,7 +56,6 @@ export const AppContent: React.FC = () => {
           roblox: {
             ...baseState.roblox,
             ...robloxLive,
-            isMock: false,
           },
         };
       }

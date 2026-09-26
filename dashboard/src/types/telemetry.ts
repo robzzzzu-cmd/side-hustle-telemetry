@@ -13,6 +13,8 @@ export interface RobloxTelemetry {
   activeServerCount: number;
   crashRatePercent: number;
   errorCount: number;
+  isMock?: boolean;
+  collectedAt?: string;
   recentErrors: Array<{
     script: string;
     message: string;
