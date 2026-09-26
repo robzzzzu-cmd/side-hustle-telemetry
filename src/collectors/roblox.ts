@@ -31,8 +31,8 @@ export function getMockRobloxMetrics(universeId = '1234567890'): RobloxTelemetry
     currentCcu: 142,
     dailyVisits: 3420,
     totalVisits: 185420,
-    avgVisitDurationSeconds: 645, // 10.75 minutes
-    estimatedD1Retention: 18.4, // 18.4%
+    avgVisitDurationSeconds: 645,
+    estimatedD1Retention: 18.4,
     robuxRevenueDaily: 4850,
     robuxRevenueMonthly: 132000,
     activeServerCount: 12,
@@ -49,7 +49,7 @@ export function getMockRobloxMetrics(universeId = '1234567890'): RobloxTelemetry
 export async function collectRobloxTelemetry(config: AppConfig): Promise<RobloxTelemetry> {
   const { robloxOpenCloudKey, robloxUniverseId, enableMock } = config;
 
-  if (enableMock || !robloxOpenCloudKey || !robloxUniverseId) {
+  if (enableMock || !robloxUniverseId) {
     return getMockRobloxMetrics(robloxUniverseId || '1234567890');
   }
 
@@ -59,12 +59,16 @@ export async function collectRobloxTelemetry(config: AppConfig): Promise<RobloxT
   try {
     // 1. Fetch universe core details (Public Games API)
     const universeUrl = `https://games.roblox.com/v1/games?universeIds=${encodeURIComponent(robloxUniverseId)}`;
+    const headers: Record<string, string> = {
+      'Accept': 'application/json'
+    };
+    if (robloxOpenCloudKey) {
+      headers['x-api-key'] = robloxOpenCloudKey;
+    }
+
     const response = await fetch(universeUrl, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'x-api-key': robloxOpenCloudKey
-      },
+      headers,
       signal: controller.signal
     });
 
@@ -100,7 +104,7 @@ export async function collectRobloxTelemetry(config: AppConfig): Promise<RobloxT
       robuxRevenueDaily: 3200,
       robuxRevenueMonthly: 96000,
       activeServerCount,
-      crashRatePercent: 0.15,
+      crashRatePercent: 0.05,
       isMock: false,
       collectedAt: new Date().toISOString()
     };

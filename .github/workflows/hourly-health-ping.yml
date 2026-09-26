@@ -6,35 +6,75 @@ on:
     - cron: '0 * * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 concurrency:
-  group: hourly-health-ping
-  cancel-in-progress: true
+  group: 'pages'
+  cancel-in-progress: false
 
 jobs:
-  ping:
-    name: Fast Uptime and Health Check
+  ping-and-deploy:
+    name: Fast Uptime Health Check & Deploy Real Dashboard
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout Codebase
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install Dependencies
+      - name: Install Root Dependencies
         run: npm install
 
       - name: Verify TypeScript Compilation
         run: npm run build
 
-      - name: Run Hourly Health Ping
+      - name: Run Hourly Health Ping (Collect Real Telemetry)
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           ROBLOX_OPENCLOUD_KEY: ${{ secrets.ROBLOX_OPENCLOUD_KEY }}
           ROBLOX_UNIVERSE_ID: ${{ secrets.ROBLOX_UNIVERSE_ID }}
           MONITORED_URLS: ${{ secrets.MONITORED_URLS }}
-          ENABLE_MOCK: ${{ secrets.ENABLE_MOCK }}
+          ENABLE_MOCK: 'false'
         run: npm run health
+
+      - name: Commit Telemetry Snapshot to Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add dashboard/public/data/telemetry-latest.json || true
+          git diff --staged --quiet || git commit -m "Update live telemetry snapshot [skip ci]"
+          git push || true
+
+      - name: Install Dashboard Dependencies
+        run: |
+          cd dashboard
+          npm install
+
+      - name: Build Dashboard with Real Telemetry
+        run: |
+          cd dashboard
+          npm run build
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dashboard/dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -6,31 +6,41 @@ on:
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 concurrency:
-  group: weekly-growth-audit
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:
-  audit:
-    name: Execute Full LLM Growth Audit
+  audit-and-deploy:
+    name: Execute Full LLM Growth Audit & Deploy Real Dashboard
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout Codebase
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install Dependencies
+      - name: Install Root Dependencies
         run: npm install
 
       - name: Verify TypeScript Compilation
         run: npm run build
 
-      - name: Run Strategic Growth Audit Pipeline
+      - name: Run Strategic Growth Audit Pipeline (Collect Real Telemetry)
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
@@ -39,6 +49,36 @@ jobs:
           ROBLOX_OPENCLOUD_KEY: ${{ secrets.ROBLOX_OPENCLOUD_KEY }}
           ROBLOX_UNIVERSE_ID: ${{ secrets.ROBLOX_UNIVERSE_ID }}
           MONITORED_URLS: ${{ secrets.MONITORED_URLS }}
-          ENABLE_MOCK: ${{ secrets.ENABLE_MOCK }}
+          ENABLE_MOCK: 'false'
           SEARCH_CONSOLE_ENABLED: ${{ secrets.SEARCH_CONSOLE_ENABLED }}
         run: npm run audit
+
+      - name: Commit Telemetry Snapshot to Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add dashboard/public/data/telemetry-latest.json || true
+          git diff --staged --quiet || git commit -m "Update live telemetry snapshot [skip ci]"
+          git push || true
+
+      - name: Install Dashboard Dependencies
+        run: |
+          cd dashboard
+          npm install
+
+      - name: Build Dashboard with Real Telemetry
+        run: |
+          cd dashboard
+          npm run build
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dashboard/dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
