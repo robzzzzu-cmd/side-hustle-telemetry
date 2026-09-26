@@ -1,10 +1,55 @@
-# 🚀 Side-Hustle Telemetry
+# 🚀 Side-Hustle Telemetry & Pixel Studio HQ
 
-> Production-ready Node.js / TypeScript automation engine designed to track side hustles (specifically **Roblox games** and **web applications**), monitor errors and uptime, feed aggregated metrics into an **LLM Growth Advisor** for actionable strategy, and broadcast structured rich embeds to **Discord Webhooks**. Powered by GitHub Actions with zero server infrastructure costs.
+> Production-ready Node.js / TypeScript automation engine and retro 16-bit pixel-art web dashboard designed to track side hustles (specifically **Roblox games** and **web applications**), monitor errors and uptime, feed aggregated metrics into an **LLM Growth Advisor** for actionable strategy, and broadcast structured rich embeds to **Discord Webhooks**. Powered by GitHub Actions with zero server infrastructure costs.
 
 ---
 
-## 🌟 Key Architecture & Capabilities
+## 🕹️ Pixel Studio HQ • Retro 16-Bit Web Dashboard
+
+An interactive, responsive 16-bit retro pixel-art office simulation built with **React**, **Vite**, **Tailwind CSS**, and **HTML5 Canvas**.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│  🕹️ PIXEL STUDIO HQ • TOP HUD: $1,485.50 • 99.9% Uptime • 142 CCU [CRT] │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│   [DESK 1: ROBLOX DEV]       [DESK 4: AI DIRECTOR]    [DESK 3: SEO]    │
+│    • Working (Green Code)     • Pacing Floor           • Whiteboard    │
+│    • Crashing (Smoke Puffs)   • Cyan Cyber Visor       • Speech Bubble │
+│    • Booming (Gold Coins)     • 3 Growth Experiments   • Leak Alerts   │
+│                                                                        │
+│                 [DESK 2: SYSADMIN & SERVER RACK]                       │
+│                  • Normal: Blinking green/cyan LEDs                    │
+│                  • Outage: Flashing siren & fire sparks                │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────┤
+│   [SIMULATE STATE]:  [🟢 NOMINAL]   [🚨 WEB OUTAGE]   [💥 CRASH SPIKE]  │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### Dashboard Features
+- **4 Dynamic Office Desks:**
+  - **Desk 1 (Roblox Dev):** Animates typing loop. Reacts with dark smoke particle effects if runtime exceptions occur (`errorCount > 0`), or bouncing golden pixel coins when CCU spikes above 50!
+  - **Desk 2 (Web Sysadmin):** Multi-rack server unit with animated blinking LEDs. Triggers a spinning red emergency siren beacon and leaping pixel flames if any monitored website goes down.
+  - **Desk 3 (SEO Specialist):** Draws growth trajectory arrows on an office whiteboard. Displays floating cartoon speech bubbles flagging high-impression / low-CTR search queries (`>300 imp, <2.0% CTR`).
+  - **Desk 4 (The AI Director):** A stylish executive with a cyan holographic cyber visor pacing across the office floor. Clicking the Director opens the **Weekly Strategic Directive** modal featuring 3 testable growth experiments and interactive confetti cannons.
+- **Click-to-Inspect Modals:** Click any character or desk to reveal real-time gauges, Luau stack traces, endpoint latency tables, and search opportunities.
+- **Retro Audio & CRT FX:** Built-in toggleable CRT scanlines + curved glass vignette, plus synthesized 8-bit chiptune sound effects powered natively by the Web Audio API (zero external audio files).
+- **Interactive State Switcher:** Instantly preview Nominal/Booming, Web Outage, and Crash Spike scenarios directly in your browser.
+
+### Running the Dashboard Locally
+```bash
+# Install dashboard dependencies
+npm run dashboard:install
+
+# Start the Vite development server
+npm run dashboard:dev
+# -> Visit http://localhost:3000
+```
+
+---
+
+## 🌟 Automation Architecture & Capabilities
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -57,6 +102,18 @@
 │   └── workflows/
 │       ├── weekly-growth-audit.yml   # Runs Sunday at midnight UTC; executes full LLM growth audit
 │       └── hourly-health-ping.yml    # Runs every 60 minutes; fast uptime and critical error checks
+├── dashboard/                        # Retro 16-bit React/Vite/Tailwind Web Dashboard
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── OfficeCanvas.tsx      # Procedural pixel-art office renderer with dynamic particle engine
+│   │   │   ├── TopHUD.tsx            # NES-style HUD with revenue, uptime, and CCU counters
+│   │   │   ├── RetroScanlines.tsx    # CRT scanlines & vignette overlay
+│   │   │   ├── ScenarioControls.tsx  # Interactive state simulation switcher
+│   │   │   └── Modals/               # Worker inspect & AI Strategic Directive dialogs
+│   │   ├── utils/soundEffects.ts     # Procedural 8-bit audio synth via native Web Audio API
+│   │   └── data/mockTelemetry.ts     # Realistic telemetry datasets (Nominal, Outage, Crashing)
+│   ├── package.json
+│   └── vite.config.ts
 ├── src/
 │   ├── config.ts                     # Zod-validated environment config with fallbacks
 │   ├── types.ts                      # Strict TypeScript interfaces for metrics & embeds
@@ -79,7 +136,7 @@
 
 ---
 
-## ⚡ Quickstart & Mock Testing
+## ⚡ Quickstart & CLI Testing
 
 You can run and test the complete pipeline immediately with synthetic telemetry:
 
@@ -97,8 +154,6 @@ npm run test:mock
 # 4. Execute mock hourly health ping
 npm run test:health:mock
 ```
-
-Both mock commands will execute without requiring any external API keys and output the formatted embeds directly to your terminal.
 
 ---
 
@@ -125,44 +180,16 @@ To run live telemetry in GitHub Actions, navigate to **Settings -> Secrets and v
 ### 1. Roblox Open Cloud Setup
 1. Navigate to the [Roblox Creator Dashboard](https://create.roblox.com/dashboard/credentials).
 2. Select **Open Cloud -> API Keys** and click **Create API Key**.
-3. Add the following permissions:
-   - `Universe Analytics` (Read)
-   - `DataStore` (Read)
-4. Set IP restrictions to `0.0.0.0/0` (GitHub Actions runner pool) or generate fresh keys.
-5. Copy the generated key into your GitHub Secrets as `ROBLOX_OPENCLOUD_KEY`.
-6. Add your numeric Universe ID as `ROBLOX_UNIVERSE_ID`.
+3. Add permissions for `Universe Analytics` (Read) and `DataStore` (Read).
+4. Copy the generated key into your GitHub Secrets as `ROBLOX_OPENCLOUD_KEY`.
+5. Add your numeric Universe ID as `ROBLOX_UNIVERSE_ID`.
 
 ### 2. In-Game Error Logger (Luau)
 1. Open your Roblox project in **Roblox Studio**.
-2. Navigate to the Explorer pane -> `ServerScriptService`.
-3. Create a new Script named `ErrorLogger`.
-4. Copy and paste the entire contents of [`luau/ErrorLogger.luau`](luau/ErrorLogger.luau).
-5. Paste your Discord Webhook or alerting URL into `CONFIG.ENDPOINT_URL`.
-6. Go to **Game Settings -> Security** and toggle **Allow HTTP Requests** to **ON**.
-
----
-
-## 📈 Search Console "Growth Leaks" Logic
-
-The engine automatically scans queries with high search impressions (>300) where CTR is lagging under 2.0%:
-- Identifies queries where users find your page on Google but choose competitor snippets.
-- Generates tactical title tag and structured metadata copywriting recommendations.
-- Feeds leaks into the LLM Growth Advisor to craft A/B testing hypotheses.
-
----
-
-## 🤖 AI Growth Advisor Specification
-
-The analyzer prompt enforces structured quantitative outputs:
-
-> *"You are a quantitative growth strategist for indie games and web apps. Analyze telemetry, diagnose conversion friction and retention bottlenecks, and prescribe exactly 3 high-impact, testable experiments for the coming week."*
-
-### Heuristic Fallback
-If the LLM endpoint is unreachable or `LLM_API_KEY` is not provided, the engine runs a deterministic heuristic analyzer that maps:
-- D1 Retention `< 20%` ➔ FTUE Tutorial Milestone Acceleration
-- Revenue/Player `< 1.5 R$` ➔ Impulse Micro-Gamepass Introduction
-- Web Latency `> 2000ms` ➔ Stale-while-revalidate Edge Caching
-- High Imp / Low CTR ➔ Meta Title Hook Rewrites
+2. In Explorer -> `ServerScriptService`, create a script named `ErrorLogger`.
+3. Copy and paste [`luau/ErrorLogger.luau`](luau/ErrorLogger.luau).
+4. Set `CONFIG.ENDPOINT_URL` to your Discord Webhook or alerting URL.
+5. In **Game Settings -> Security**, toggle **Allow HTTP Requests** to **ON**.
 
 ---
 

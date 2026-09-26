@@ -11,7 +11,10 @@
     "health": "tsx src/index.ts --mode health",
     "test:mock": "tsx src/index.ts --mock --mode audit",
     "test:health:mock": "tsx src/index.ts --mock --mode health",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dashboard:install": "npm --prefix dashboard install",
+    "dashboard:dev": "npm --prefix dashboard run dev",
+    "dashboard:build": "npm --prefix dashboard run build"
   },
   "keywords": [
     "telemetry",
@@ -20,7 +23,9 @@
     "llm",
     "growth-advisor",
     "discord-webhook",
-    "github-actions"
+    "github-actions",
+    "pixel-art",
+    "dashboard"
   ],
   "author": "robzzzzu-cmd",
   "license": "MIT",
