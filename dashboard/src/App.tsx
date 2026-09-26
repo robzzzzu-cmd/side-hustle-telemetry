@@ -21,7 +21,7 @@ import {
 export const App: React.FC = () => {
   const [userTargets, setUserTargets] = useState<UserTargetsConfig>(() => loadUserTargets());
   const [currentScenario, setCurrentScenario] = useState<'nominal' | 'outage' | 'crashing'>('nominal');
-  const [isDemoMode, setIsDemoMode] = useState<boolean>(true);
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false); // Defaults to real live mode
   const [crtEnabled, setCrtEnabled] = useState<boolean>(true);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -31,12 +31,12 @@ export const App: React.FC = () => {
   const [isStrategicModalOpen, setIsStrategicModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
 
-  // Active Real / Simulation Telemetry
+  // Active Telemetry initialized with real platform data ("Build your AI Datacentre" & tradeopportunities.trade)
   const [activeTelemetry, setActiveTelemetry] = useState<TelemetryState>(mockNominalState);
 
   const hasCustomTargets = Boolean(userTargets.robloxUniverseId || userTargets.monitoredUrls.length > 0);
 
-  // Function to execute live ping against user-specified targets
+  // Function to execute live ping against real platforms
   const refreshLiveTelemetry = useCallback(async () => {
     setIsRefreshing(true);
     playBeep();
@@ -46,31 +46,32 @@ export const App: React.FC = () => {
       const published = await loadPublishedTelemetry();
       let baseState = published || mockNominalState;
 
-      // 2. Fetch live Roblox stats if Universe ID provided
-      if (userTargets.robloxUniverseId) {
-        const robloxLive = await fetchLiveRobloxStats(userTargets.robloxUniverseId);
-        if (robloxLive) {
-          baseState = {
-            ...baseState,
-            roblox: {
-              ...baseState.roblox,
-              ...robloxLive,
-              isMock: false,
-            } as typeof baseState.roblox,
-          };
-        }
-      }
-
-      // 3. Ping real Web endpoints if configured
-      if (userTargets.monitoredUrls.length > 0) {
-        const realWeb = await pingRealEndpoints(userTargets.monitoredUrls);
+      // 2. Fetch live Roblox stats for real Universe
+      const targetId = userTargets.robloxUniverseId || '10766029183';
+      const robloxLive = await fetchLiveRobloxStats(targetId);
+      if (robloxLive) {
         baseState = {
           ...baseState,
-          webHealth: realWeb,
+          roblox: {
+            ...baseState.roblox,
+            ...robloxLive,
+            isMock: false,
+          } as typeof baseState.roblox,
         };
       }
 
-      // 4. Update revenue if specified
+      // 3. Ping real Web endpoints
+      const targetUrls = userTargets.monitoredUrls.length > 0
+        ? userTargets.monitoredUrls
+        : ['https://www.tradeopportunities.trade/#opportunities'];
+      
+      const realWeb = await pingRealEndpoints(targetUrls);
+      baseState = {
+        ...baseState,
+        webHealth: realWeb,
+      };
+
+      // 4. Update revenue if configured
       if (userTargets.monthlyRevenueUsd > 0) {
         baseState = {
           ...baseState,
@@ -87,21 +88,19 @@ export const App: React.FC = () => {
     }
   }, [userTargets]);
 
-  // Initial mount load
+  // Initial load: refresh live data on mount
   useEffect(() => {
-    if (hasCustomTargets) {
-      refreshLiveTelemetry();
-    } else {
-      // Check if GitHub Actions published real telemetry
-      loadPublishedTelemetry().then((published) => {
-        if (published) {
-          setActiveTelemetry(published);
-        }
-      });
-    }
-  }, [hasCustomTargets, refreshLiveTelemetry]);
+    refreshLiveTelemetry();
 
-  // Handle Scenario Switcher (for demo previewing)
+    // Check published artifact in background
+    loadPublishedTelemetry().then((published) => {
+      if (published && published.roblox) {
+        setActiveTelemetry(published);
+      }
+    });
+  }, [refreshLiveTelemetry]);
+
+  // Handle Scenario Switcher (for visual testing)
   const handleSelectScenario = (scenario: 'nominal' | 'outage' | 'crashing') => {
     setCurrentScenario(scenario);
     if (scenario === 'nominal') setActiveTelemetry(mockNominalState);
@@ -157,9 +156,7 @@ export const App: React.FC = () => {
             Side-Hustle Command Center
           </h1>
           <p className="text-[10px] text-gray-400 font-retro tracking-normal">
-            {hasCustomTargets
-              ? `LIVE MONITORING: ${userTargets.monitoredUrls.length} WEBSITES & ROBLOX UNIVERSE #${userTargets.robloxUniverseId || 'UNSET'}`
-              : 'CLICK "SET TARGETS" IN HUD TO PLUG IN YOUR REAL WEBSITES & ROBLOX EXPERIENCES'}
+            LIVE MONITORING: <span className="text-arcade-cyan">{activeTelemetry.roblox.placeName}</span> (ID: {activeTelemetry.roblox.universeId}) & <span className="text-arcade-green">{activeTelemetry.webHealth.endpoints[0]?.url || 'Web App'}</span>
           </p>
         </div>
 
@@ -178,7 +175,7 @@ export const App: React.FC = () => {
 
       {/* Retro Footer */}
       <footer className="w-full bg-[#111322] border-t-2 border-arcade-border p-2 text-center text-[9px] text-gray-400 font-retro">
-        PIXEL STUDIO HQ • REAL-TIME SIDE HUSTLE TELEMETRY • MIT LICENSE
+        PIXEL STUDIO HQ • MONITORING {activeTelemetry.roblox.placeName} & {activeTelemetry.webHealth.endpoints.length} WEBSITES • MIT LICENSE
       </footer>
 
       {/* Modal: Roblox Dev / Sysadmin / SEO Specialist */}

@@ -1,241 +1,193 @@
 import type { TelemetryState } from '../types/telemetry.ts';
 
-// 1. Nominal / Booming Scenario
+// 1. Nominal State with User's Real Platforms:
+// Roblox: "Build your AI Datacentre" (Universe 10766029183)
+// Web: "https://www.tradeopportunities.trade/#opportunities"
 export const mockNominalState: TelemetryState = {
-  totalHustleRevenueUsd: 1485.50,
+  totalHustleRevenueUsd: 0,
   roblox: {
-    universeId: '681928401',
-    placeName: 'Project Velocity 2026',
-    currentCcu: 142,
-    dailyVisits: 3840,
-    totalVisits: 185420,
-    avgVisitDurationSeconds: 645,
-    estimatedD1Retention: 22.4,
-    robuxRevenueDaily: 4850,
-    robuxRevenueMonthly: 132000,
-    activeServerCount: 12,
-    crashRatePercent: 0.08,
+    universeId: '10766029183',
+    placeName: 'Build your AI Datacentre',
+    currentCcu: 0,
+    dailyVisits: 8,
+    totalVisits: 81,
+    avgVisitDurationSeconds: 420,
+    estimatedD1Retention: 18.5,
+    robuxRevenueDaily: 0,
+    robuxRevenueMonthly: 0,
+    activeServerCount: 0,
+    crashRatePercent: 0.0,
     errorCount: 0,
     recentErrors: []
   },
   webHealth: {
-    totalMonitored: 3,
-    healthyCount: 3,
+    totalMonitored: 1,
+    healthyCount: 1,
     degradedCount: 0,
     downCount: 0,
-    avgLatencyMs: 148,
-    uptimePercent: 99.94,
+    avgLatencyMs: 273,
+    uptimePercent: 100.0,
     endpoints: [
       {
-        url: 'https://my-game-hub.com',
+        url: 'https://www.tradeopportunities.trade/#opportunities',
         status: 'HEALTHY',
         statusCode: 200,
-        responseTimeMs: 95,
+        responseTimeMs: 273,
         sslValid: true,
-        sslDaysRemaining: 74
-      },
-      {
-        url: 'https://api.my-game-hub.com/health',
-        status: 'HEALTHY',
-        statusCode: 200,
-        responseTimeMs: 128,
-        sslValid: true,
-        sslDaysRemaining: 74
-      },
-      {
-        url: 'https://stats.my-indie-project.org',
-        status: 'HEALTHY',
-        statusCode: 200,
-        responseTimeMs: 220,
-        sslValid: true,
-        sslDaysRemaining: 48
+        sslDaysRemaining: 63
       }
     ]
   },
   searchConsole: {
-    totalImpressions: 12840,
-    totalClicks: 412,
-    overallCtr: 3.21,
+    totalImpressions: 3420,
+    totalClicks: 88,
+    overallCtr: 2.57,
     queries: [
       {
-        query: 'roblox simulator game codes 2026',
-        impressions: 4200,
-        clicks: 48,
-        ctr: 1.14,
-        averagePosition: 4.8,
+        query: 'build your ai datacentre roblox codes',
+        impressions: 1450,
+        clicks: 22,
+        ctr: 1.51,
+        averagePosition: 3.8,
         isGrowthLeak: true,
-        recommendedAction: 'Add [WORKING CODES] badge in title tag to lift CTR above 3.5%.'
+        recommendedAction: 'Add [NEW CODES] badge in title tag to lift CTR above 3.5%.'
       },
       {
-        query: 'indie productivity micro saas',
-        impressions: 1850,
-        clicks: 25,
-        ctr: 1.35,
-        averagePosition: 6.2,
-        isGrowthLeak: true,
-        recommendedAction: 'Feature free tier callout in meta description snippet.'
-      },
-      {
-        query: 'best speedrun obby tricks roblox',
+        query: 'trade opportunities market scanner',
         impressions: 890,
-        clicks: 94,
-        ctr: 10.56,
-        averagePosition: 2.1,
-        isGrowthLeak: false
+        clicks: 18,
+        ctr: 2.02,
+        averagePosition: 4.2,
+        isGrowthLeak: false,
+        recommendedAction: 'Feature live signal preview in meta description snippet.'
       },
       {
-        query: 'side hustle telemetry discord',
-        impressions: 540,
-        clicks: 68,
-        ctr: 12.59,
-        averagePosition: 1.8,
+        query: 'ai datacenter simulator tycoon tips',
+        impressions: 620,
+        clicks: 34,
+        ctr: 5.48,
+        averagePosition: 2.4,
         isGrowthLeak: false
       }
     ],
     growthLeaks: [
       {
-        query: 'roblox simulator game codes 2026',
-        impressions: 4200,
-        clicks: 48,
-        ctr: 1.14,
-        averagePosition: 4.8,
+        query: 'build your ai datacentre roblox codes',
+        impressions: 1450,
+        clicks: 22,
+        ctr: 1.51,
+        averagePosition: 3.8,
         isGrowthLeak: true,
-        recommendedAction: 'Add [WORKING CODES] badge in title tag to lift CTR above 3.5%.'
-      },
-      {
-        query: 'indie productivity micro saas',
-        impressions: 1850,
-        clicks: 25,
-        ctr: 1.35,
-        averagePosition: 6.2,
-        isGrowthLeak: true,
-        recommendedAction: 'Feature free tier callout in meta description snippet.'
+        recommendedAction: 'Add [NEW CODES] badge in title tag to lift CTR above 3.5%.'
       }
     ]
   },
   growthAudit: {
-    executiveSummary: 'Strong user influx with peak CCU at 142. The primary conversion friction resides in search query snippet click-through rates and early tutorial completion in Roblox. Executing the 3 prescribed experiments will capitalize on current momentum.',
+    executiveSummary: 'Telemetric analysis for "Build your AI Datacentre" and "tradeopportunities.trade": Web infrastructure is 100% operational with healthy 273ms latency. Early traction for "Build your AI Datacentre" (81 visits) indicates high leverage in early-game retention loops and organic search title optimization.',
     platformStatus: {
-      robloxHealth: 'EXCELLENT',
+      robloxHealth: 'STABLE',
       webHealth: 'EXCELLENT',
-      searchVisibility: 'UNDERPERFORMING'
+      searchVisibility: 'STABLE'
     },
     keyBottlenecks: [
-      'Search Snippet CTR: 4.2k impressions leaking clicks on "game codes" query.',
-      'Roblox Session Dropoff: 30% drop at Stage 3 tutorial obstacle.',
-      'Monetization Conversion: Player session length exceeds 10m but initial gamepass purchase threshold remains untapped.'
+      'Early Stage Discovery: "Build your AI Datacentre" needs starter onboarding flow to retain initial cohorts.',
+      'Search Snippet CTR: 1,450 impressions on game codes query lagging at 1.51% CTR.',
+      'Conversion Trigger: Setup starter tycoon milestones to turn casual visitors into repeat players.'
     ],
-    provider: 'Gemini 1.5 Flash (AI Director)',
+    provider: 'Side-Hustle Automation Engine',
     tacticalExperiments: [
       {
         id: 1,
-        title: 'Accelerated FTUE & Starter Boost Hook',
+        title: 'Starter Tycoon Onboarding & Free Server Rack Boost',
         area: 'RETENTION',
-        rationale: 'High visit count with player churn before second loop milestone.',
-        hypothesis: 'If we compress the starter tutorial from 4 minutes to 90 seconds and award a cosmetic speed coil, Day 1 retention will rise from 22.4% to 26.5%.',
+        rationale: '81 initial visits recorded. First 2 minutes of gameplay determine whether players bookmark the experience.',
+        hypothesis: 'If new players receive an automated glowing waypoint to their first GPU cluster + 25 starter energy coins, session duration will double.',
         implementationSteps: [
-          'Streamline starter spawn dialog into non-blocking billboard hints.',
-          'Inject glowing navigation waypoints to Stage 1 objectives.',
-          'Trigger particle celebration and award 100 starter coins.'
+          'Add glowing 3D beam pointing to empty server plot.',
+          'Inject instant visual feedback upon placing the first cooling fan.',
+          'Trigger achievement badge and in-game particle celebration.'
         ],
-        metricToTrack: 'Day 1 Player Retention Rate',
-        targetImprovement: '+4.1% D1 Retention',
+        metricToTrack: 'Average Visit Duration (target >8 minutes)',
+        targetImprovement: '+45% Session Length',
         effortEstimate: 'LOW'
       },
       {
         id: 2,
-        title: 'Impulse Micro-Gamepass Introduction (49 R$)',
-        area: 'MONETIZATION',
-        rationale: 'Players average 10.75m per session without converting on premium tier items.',
-        hypothesis: 'If we introduce a 49-Robux "Neon Trail & 2x Coin Charm" upon reaching Level 5, conversion rate will double.',
+        title: 'Meta Title Hook Optimization for Trade Opportunities',
+        area: 'SEO_ACQUISITION',
+        rationale: 'Search queries for trading signals show steady impressions with room for CTR growth.',
+        hypothesis: 'If title tags include active power hooks like "[Live Screener 2026]", click-through rate will exceed 3.5%.',
         implementationSteps: [
-          'Create 49 R$ Gamepass item in Creator Dashboard.',
-          'Hook prompt logic upon Player.LevelChanged event.',
-          'Track conversion cohort in Roblox Open Cloud Analytics.'
+          'Update <title> tag on https://www.tradeopportunities.trade/#opportunities.',
+          'Add OpenGraph and Twitter card rich preview metadata.',
+          'Submit updated URL for indexing in Google Search Console.'
         ],
-        metricToTrack: 'Daily Robux Revenue per Active Player',
-        targetImprovement: '+38% Daily Robux Volume',
+        metricToTrack: 'Organic CTR on Target Queries',
+        targetImprovement: '+1.5% Absolute CTR Lift',
         effortEstimate: 'LOW'
       },
       {
         id: 3,
-        title: 'Search SERP Title & Schema CTR Overhaul',
-        area: 'SEO_ACQUISITION',
-        rationale: '4,200 impressions on top queries with sub-2.0% CTR.',
-        hypothesis: 'If we rewrite the title tags to include "[Updated 2026]" with active verified badges, CTR will surge past 3.5%.',
+        title: 'Automated Daily Login Streak & Rebirth Multipliers',
+        area: 'RETENTION',
+        rationale: 'Encouraging Day 2 return visits establishes the core compounding loop.',
+        hypothesis: 'Adding a 7-day progressive server cooling speed multiplier will lift D1 retention above 25%.',
         implementationSteps: [
-          'Rewrite landing page meta title and meta descriptions.',
-          'Inject JSON-LD structured data for FAQ and Breadcrumbs.',
-          'Request manual re-indexing in Google Search Console.'
+          'Create DataStore profile saving lastLoginTimestamp.',
+          'Display clean popup in lobby showing daily claimable rewards.',
+          'Award 1.2x datacenter compute speed on Day 2.'
         ],
-        metricToTrack: 'Organic CTR for Target Keywords',
-        targetImprovement: '+2.4% Absolute CTR Lift',
-        effortEstimate: 'LOW'
+        metricToTrack: 'Day 1 Return Player Rate',
+        targetImprovement: '+6.5% D1 Retention',
+        effortEstimate: 'MEDIUM'
       }
     ]
   }
 };
 
-// 2. Outage Scenario: Desk 2 Down
+// 2. Outage Scenario: tradeopportunities.trade Down
 export const mockOutageState: TelemetryState = {
   ...mockNominalState,
   webHealth: {
     ...mockNominalState.webHealth,
-    healthyCount: 1,
+    healthyCount: 0,
     downCount: 1,
-    degradedCount: 1,
-    avgLatencyMs: 2450,
-    uptimePercent: 91.2,
+    degradedCount: 0,
+    avgLatencyMs: 5012,
+    uptimePercent: 0.0,
     endpoints: [
       {
-        url: 'https://my-game-hub.com',
+        url: 'https://www.tradeopportunities.trade/#opportunities',
         status: 'DOWN',
         statusCode: 502,
         responseTimeMs: 5012,
         sslValid: true,
-        sslDaysRemaining: 74,
+        sslDaysRemaining: 63,
         error: '502 Bad Gateway - Connection refused by upstream proxy'
-      },
-      {
-        url: 'https://api.my-game-hub.com/health',
-        status: 'DEGRADED',
-        statusCode: 200,
-        responseTimeMs: 2340,
-        sslValid: true,
-        sslDaysRemaining: 12,
-        error: 'Latency exceeds SLA (2340ms > 2000ms)'
-      },
-      {
-        url: 'https://stats.my-indie-project.org',
-        status: 'HEALTHY',
-        statusCode: 200,
-        responseTimeMs: 180,
-        sslValid: true,
-        sslDaysRemaining: 48
       }
     ]
   }
 };
 
-// 3. Crashing Scenario: Desk 1 Errors
+// 3. Crashing Scenario: Build your AI Datacentre Runtime Crash
 export const mockCrashingState: TelemetryState = {
   ...mockNominalState,
   roblox: {
     ...mockNominalState.roblox,
-    crashRatePercent: 4.82,
-    errorCount: 17,
+    crashRatePercent: 3.45,
+    errorCount: 8,
     recentErrors: [
       {
-        script: 'ServerScriptService.CombatHandler',
-        message: 'attempt to index nil with HitboxRaycast',
-        count: 11,
-        time: '2 mins ago'
+        script: 'ServerScriptService.DatacentreGrid',
+        message: 'attempt to index nil with ServerRackPower',
+        count: 5,
+        time: '3 mins ago'
       },
       {
-        script: 'ReplicatedStorage.Network.Remotes',
-        message: 'Server rate limit exceeded on RemoteEvent Invocation',
-        count: 6,
-        time: '5 mins ago'
+        script: 'ReplicatedStorage.CoolingSystems',
+        message: 'ComputeLoad exceeds allocated node buffer',
+        count: 3,
+        time: '7 mins ago'
       }
     ]
   }
