@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Zap, AlertTriangle, ShieldCheck, Flame } from 'lucide-react';
+import { RefreshCw, AlertTriangle, ShieldCheck, Flame } from 'lucide-react';
 
 interface ScenarioControlsProps {
   currentScenario: string;

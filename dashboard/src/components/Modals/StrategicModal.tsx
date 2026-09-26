@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Sparkles, CheckCircle2, Target, Zap, Rocket } from 'lucide-react';
+import { X, Sparkles, Target, Zap, Rocket } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import type { GrowthAuditReport } from '../../types/telemetry.ts';
 
