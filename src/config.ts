@@ -10,14 +10,25 @@ const cliMode: ExecutionMode = modeArgIndex !== -1 && args[modeArgIndex + 1]
   ? (args[modeArgIndex + 1].toLowerCase() as ExecutionMode)
   : (process.env.MODE?.toLowerCase() as ExecutionMode) || 'audit';
 
+// Preprocessor to convert empty strings (from unset GitHub secrets) to undefined
+const emptyStringToUndefined = (val: unknown) => {
+  if (typeof val === 'string' && val.trim() === '') return undefined;
+  return val;
+};
+
 const rawEnvSchema = z.object({
-  DISCORD_WEBHOOK_URL: z.string().optional().default(''),
-  LLM_API_KEY: z.string().optional(),
-  LLM_PROVIDER: z.enum(['gemini', 'openai']).optional().default('gemini'),
-  LLM_MODEL: z.string().optional(),
-  ROBLOX_OPENCLOUD_KEY: z.string().optional(),
-  ROBLOX_UNIVERSE_ID: z.string().optional(),
-  MONITORED_URLS: z.string().optional().default(''),
+  DISCORD_WEBHOOK_URL: z.preprocess(emptyStringToUndefined, z.string().optional().default('')),
+  LLM_API_KEY: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  LLM_PROVIDER: z.preprocess((val) => {
+    const cleaned = emptyStringToUndefined(val);
+    if (!cleaned) return 'gemini';
+    const lower = String(cleaned).toLowerCase();
+    return lower === 'openai' ? 'openai' : 'gemini';
+  }, z.enum(['gemini', 'openai'])).default('gemini'),
+  LLM_MODEL: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  ROBLOX_OPENCLOUD_KEY: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  ROBLOX_UNIVERSE_ID: z.preprocess(emptyStringToUndefined, z.string().optional()),
+  MONITORED_URLS: z.preprocess(emptyStringToUndefined, z.string().optional().default('')),
   ENABLE_MOCK: z.preprocess((val) => {
     if (typeof val === 'string') return val.toLowerCase() === 'true';
     return Boolean(val);

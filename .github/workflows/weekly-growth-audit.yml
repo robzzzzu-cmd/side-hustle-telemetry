@@ -23,10 +23,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci || npm install
+        run: npm install
 
       - name: Verify TypeScript Compilation
         run: npm run build
@@ -35,11 +34,11 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER || 'gemini' }}
-          LLM_MODEL: ${{ secrets.LLM_MODEL || 'gemini-1.5-flash' }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
           ROBLOX_OPENCLOUD_KEY: ${{ secrets.ROBLOX_OPENCLOUD_KEY }}
           ROBLOX_UNIVERSE_ID: ${{ secrets.ROBLOX_UNIVERSE_ID }}
           MONITORED_URLS: ${{ secrets.MONITORED_URLS }}
-          ENABLE_MOCK: ${{ secrets.ENABLE_MOCK || 'false' }}
-          SEARCH_CONSOLE_ENABLED: ${{ secrets.SEARCH_CONSOLE_ENABLED || 'false' }}
+          ENABLE_MOCK: ${{ secrets.ENABLE_MOCK }}
+          SEARCH_CONSOLE_ENABLED: ${{ secrets.SEARCH_CONSOLE_ENABLED }}
         run: npm run audit
