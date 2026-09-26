@@ -1,0 +1,39 @@
+{
+  "name": "side-hustle-telemetry",
+  "version": "1.0.0",
+  "description": "Production telemetry, health checks, LLM-driven growth advisory, and Discord reporting engine for Roblox games and web applications.",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "audit": "tsx src/index.ts --mode audit",
+    "health": "tsx src/index.ts --mode health",
+    "test:mock": "tsx src/index.ts --mock --mode audit",
+    "test:health:mock": "tsx src/index.ts --mock --mode health",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "telemetry",
+    "roblox",
+    "uptime-monitoring",
+    "llm",
+    "growth-advisor",
+    "discord-webhook",
+    "github-actions"
+  ],
+  "author": "robzzzzu-cmd",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
