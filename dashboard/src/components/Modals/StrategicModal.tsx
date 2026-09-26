@@ -12,12 +12,35 @@ interface StrategicModalProps {
 export const StrategicModal: React.FC<StrategicModalProps> = ({ isOpen, audit, onClose }) => {
   if (!isOpen) return null;
 
+  // Safe fallback for audit
+  const safeAudit = audit || {
+    executiveSummary: 'Telemetry heartbeat active across monitored platforms.',
+    platformStatus: {
+      robloxHealth: 'STABLE',
+      webHealth: 'EXCELLENT',
+      searchVisibility: 'STABLE'
+    },
+    keyBottlenecks: [],
+    tacticalExperiments: [],
+    provider: 'Side-Hustle Automation Engine'
+  };
+
+  const bottlenecks = Array.isArray(safeAudit.keyBottlenecks) ? safeAudit.keyBottlenecks : [];
+  const experiments = Array.isArray(safeAudit.tacticalExperiments) ? safeAudit.tacticalExperiments : [];
+
   const triggerConfetti = () => {
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
+    try {
+      const fire = typeof confetti === 'function' ? confetti : (confetti as unknown as { default?: typeof confetti })?.default;
+      if (typeof fire === 'function') {
+        fire({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+    } catch (e) {
+      console.warn('[Confetti] Could not trigger confetti:', e);
+    }
   };
 
   return (
@@ -47,10 +70,10 @@ export const StrategicModal: React.FC<StrategicModalProps> = ({ isOpen, audit, o
           {/* Executive Summary Terminal Card */}
           <div className="bg-[#1b1e36] border-2 border-arcade-cyan/60 p-3.5">
             <div className="text-[9px] text-arcade-cyan mb-1.5 font-retro tracking-normal">
-              &gt; QUANTITATIVE EXECUTIVE DIAGNOSIS ({audit.provider})
+              &gt; QUANTITATIVE EXECUTIVE DIAGNOSIS ({safeAudit.provider || 'AI Director'})
             </div>
             <div className="text-gray-200 text-[10px] leading-relaxed">
-              {audit.executiveSummary}
+              {safeAudit.executiveSummary || 'Telemetry nominal. Monitoring active.'}
             </div>
           </div>
 
@@ -60,14 +83,18 @@ export const StrategicModal: React.FC<StrategicModalProps> = ({ isOpen, audit, o
               <Target className="w-3.5 h-3.5" />
               <span>DIAGNOSED GROWTH FRICTION POINTS</span>
             </div>
-            <ul className="space-y-1.5 text-[10px] text-gray-300">
-              {audit.keyBottlenecks.map((b, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-arcade-gold font-bold">{i + 1}.</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+            {bottlenecks.length === 0 ? (
+              <p className="text-[10px] text-gray-400">Zero active bottlenecks identified.</p>
+            ) : (
+              <ul className="space-y-1.5 text-[10px] text-gray-300">
+                {bottlenecks.map((b, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-arcade-gold font-bold">{i + 1}.</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* 3 High-Impact Tactical Experiments */}
@@ -77,42 +104,48 @@ export const StrategicModal: React.FC<StrategicModalProps> = ({ isOpen, audit, o
               <span>3 TESTABLE WEEKLY GROWTH EXPERIMENTS</span>
             </div>
 
-            {audit.tacticalExperiments.map((exp, idx) => (
-              <div
-                key={exp.id || idx}
-                className="bg-[#171b30] border-2 border-white/20 p-3.5 space-y-2 hover:border-arcade-cyan transition-colors"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
-                  <span className="font-bold text-arcade-gold text-[11px]">
-                    #{idx + 1} {exp.title}
-                  </span>
-                  <span className="bg-black/60 px-2 py-0.5 text-[8px] text-arcade-cyan border border-arcade-cyan/40">
-                    {exp.area} • EFFORT: {exp.effortEstimate}
-                  </span>
-                </div>
-
-                <div className="text-[10px] text-gray-300">
-                  <strong className="text-white">Hypothesis:</strong> {exp.hypothesis}
-                </div>
-
-                {/* Steps */}
-                <div className="bg-black/40 p-2 border border-white/10 space-y-1">
-                  <div className="text-[9px] text-gray-400 font-retro">IMPLEMENTATION PLAN:</div>
-                  {exp.implementationSteps.map((step, sIdx) => (
-                    <div key={sIdx} className="text-[9px] text-gray-300 flex items-start gap-1.5">
-                      <span className="text-arcade-green">└ •</span>
-                      <span>{step}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Target Metric */}
-                <div className="flex justify-between items-center text-[9px] pt-1 text-gray-400">
-                  <span>Track Metric: <code className="text-arcade-green">{exp.metricToTrack}</code></span>
-                  <span className="text-arcade-gold font-bold">Target Lift: {exp.targetImprovement}</span>
-                </div>
+            {experiments.length === 0 ? (
+              <div className="bg-[#171b30] border-2 border-white/20 p-3 text-[10px] text-gray-400">
+                Experiments will populate when the weekly audit workflow runs with your LLM key.
               </div>
-            ))}
+            ) : (
+              experiments.map((exp, idx) => (
+                <div
+                  key={exp.id || idx}
+                  className="bg-[#171b30] border-2 border-white/20 p-3.5 space-y-2 hover:border-arcade-cyan transition-colors"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
+                    <span className="font-bold text-arcade-gold text-[11px]">
+                      #{idx + 1} {exp.title || 'Growth Experiment'}
+                    </span>
+                    <span className="bg-black/60 px-2 py-0.5 text-[8px] text-arcade-cyan border border-arcade-cyan/40">
+                      {exp.area || 'GROWTH'} • EFFORT: {exp.effortEstimate || 'LOW'}
+                    </span>
+                  </div>
+
+                  <div className="text-[10px] text-gray-300">
+                    <strong className="text-white">Hypothesis:</strong> {exp.hypothesis || 'Pending formulation.'}
+                  </div>
+
+                  {/* Steps */}
+                  <div className="bg-black/40 p-2 border border-white/10 space-y-1">
+                    <div className="text-[9px] text-gray-400 font-retro">IMPLEMENTATION PLAN:</div>
+                    {(exp.implementationSteps || []).map((step, sIdx) => (
+                      <div key={sIdx} className="text-[9px] text-gray-300 flex items-start gap-1.5">
+                        <span className="text-arcade-green">└ •</span>
+                        <span>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Target Metric */}
+                  <div className="flex justify-between items-center text-[9px] pt-1 text-gray-400">
+                    <span>Track Metric: <code className="text-arcade-green">{exp.metricToTrack || 'Conversion'}</code></span>
+                    <span className="text-arcade-gold font-bold">Target Lift: {exp.targetImprovement || '+10%'}</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
         </div>

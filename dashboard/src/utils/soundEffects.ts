@@ -3,15 +3,21 @@
 let audioCtx: AudioContext | null = null;
 let soundEnabled = true;
 
-function getAudioContext(): AudioContext {
-  if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    audioCtx = new AudioContextClass();
+function getAudioContext(): AudioContext | null {
+  try {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+    return audioCtx;
+  } catch {
+    return null;
   }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-  return audioCtx;
 }
 
 export function toggleSound(): boolean {
@@ -28,6 +34,8 @@ export function playBeep(): void {
   if (!soundEnabled) return;
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -44,7 +52,7 @@ export function playBeep(): void {
     osc.start();
     osc.stop(ctx.currentTime + 0.08);
   } catch {
-    // AudioContext blocked
+    // AudioContext blocked or not allowed
   }
 }
 
@@ -53,6 +61,8 @@ export function playCoinSound(): void {
   if (!soundEnabled) return;
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
+
     const now = ctx.currentTime;
 
     const osc1 = ctx.createOscillator();
@@ -86,6 +96,8 @@ export function playAlarmSound(): void {
   if (!soundEnabled) return;
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
+
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -113,6 +125,8 @@ export function playVictoryFanfare(): void {
   if (!soundEnabled) return;
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
+
     const now = ctx.currentTime;
     const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
 

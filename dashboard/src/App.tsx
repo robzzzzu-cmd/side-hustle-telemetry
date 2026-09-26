@@ -8,6 +8,7 @@ import { WorkerModal } from './components/Modals/WorkerModal.tsx';
 import { StrategicModal } from './components/Modals/StrategicModal.tsx';
 import { SettingsModal } from './components/Modals/SettingsModal.tsx';
 import { RetroScanlines } from './components/RetroScanlines.tsx';
+import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { toggleSound, playBeep, playCoinSound } from './utils/soundEffects.ts';
 import {
   loadUserTargets,
@@ -18,10 +19,10 @@ import {
   type UserTargetsConfig,
 } from './utils/liveTelemetry.ts';
 
-export const App: React.FC = () => {
+export const AppContent: React.FC = () => {
   const [userTargets, setUserTargets] = useState<UserTargetsConfig>(() => loadUserTargets());
   const [currentScenario, setCurrentScenario] = useState<'nominal' | 'outage' | 'crashing'>('nominal');
-  const [isDemoMode, setIsDemoMode] = useState<boolean>(false); // Defaults to real live mode
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [crtEnabled, setCrtEnabled] = useState<boolean>(true);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -31,7 +32,7 @@ export const App: React.FC = () => {
   const [isStrategicModalOpen, setIsStrategicModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
 
-  // Active Telemetry initialized with real platform data ("Build your AI Datacentre" & tradeopportunities.trade)
+  // Active Telemetry initialized safely with real platform baseline
   const [activeTelemetry, setActiveTelemetry] = useState<TelemetryState>(mockNominalState);
 
   const hasCustomTargets = Boolean(userTargets.robloxUniverseId || userTargets.monitoredUrls.length > 0);
@@ -56,12 +57,12 @@ export const App: React.FC = () => {
             ...baseState.roblox,
             ...robloxLive,
             isMock: false,
-          } as typeof baseState.roblox,
+          },
         };
       }
 
       // 3. Ping real Web endpoints
-      const targetUrls = userTargets.monitoredUrls.length > 0
+      const targetUrls = userTargets.monitoredUrls && userTargets.monitoredUrls.length > 0
         ? userTargets.monitoredUrls
         : ['https://www.tradeopportunities.trade/#opportunities'];
       
@@ -88,11 +89,10 @@ export const App: React.FC = () => {
     }
   }, [userTargets]);
 
-  // Initial load: refresh live data on mount
+  // Initial load
   useEffect(() => {
     refreshLiveTelemetry();
 
-    // Check published artifact in background
     loadPublishedTelemetry().then((published) => {
       if (published && published.roblox) {
         setActiveTelemetry(published);
@@ -100,7 +100,7 @@ export const App: React.FC = () => {
     });
   }, [refreshLiveTelemetry]);
 
-  // Handle Scenario Switcher (for visual testing)
+  // Handle Scenario Switcher
   const handleSelectScenario = (scenario: 'nominal' | 'outage' | 'crashing') => {
     setCurrentScenario(scenario);
     if (scenario === 'nominal') setActiveTelemetry(mockNominalState);
@@ -126,6 +126,10 @@ export const App: React.FC = () => {
     const next = toggleSound();
     setSoundEnabled(next);
   };
+
+  const activeRoblox = activeTelemetry?.roblox || mockNominalState.roblox;
+  const activeWeb = activeTelemetry?.webHealth || mockNominalState.webHealth;
+  const endpoints = activeWeb.endpoints || [];
 
   return (
     <div className="min-h-screen bg-[#0b0c16] text-white font-pixel flex flex-col justify-between selection:bg-arcade-cyan selection:text-black">
@@ -156,7 +160,7 @@ export const App: React.FC = () => {
             Side-Hustle Command Center
           </h1>
           <p className="text-[10px] text-gray-400 font-retro tracking-normal">
-            LIVE MONITORING: <span className="text-arcade-cyan">{activeTelemetry.roblox.placeName}</span> (ID: {activeTelemetry.roblox.universeId}) & <span className="text-arcade-green">{activeTelemetry.webHealth.endpoints[0]?.url || 'Web App'}</span>
+            LIVE MONITORING: <span className="text-arcade-cyan">{activeRoblox.placeName}</span> (ID: {activeRoblox.universeId}) & <span className="text-arcade-green">{endpoints[0]?.url || 'Web App'}</span>
           </p>
         </div>
 
@@ -175,7 +179,7 @@ export const App: React.FC = () => {
 
       {/* Retro Footer */}
       <footer className="w-full bg-[#111322] border-t-2 border-arcade-border p-2 text-center text-[9px] text-gray-400 font-retro">
-        PIXEL STUDIO HQ • MONITORING {activeTelemetry.roblox.placeName} & {activeTelemetry.webHealth.endpoints.length} WEBSITES • MIT LICENSE
+        PIXEL STUDIO HQ • MONITORING {activeRoblox.placeName} & {endpoints.length} WEBSITES • MIT LICENSE
       </footer>
 
       {/* Modal: Roblox Dev / Sysadmin / SEO Specialist */}
@@ -188,7 +192,7 @@ export const App: React.FC = () => {
       {/* Modal: AI Director Strategic Directive */}
       <StrategicModal
         isOpen={isStrategicModalOpen}
-        audit={activeTelemetry.growthAudit}
+        audit={activeTelemetry?.growthAudit || mockNominalState.growthAudit}
         onClose={() => setIsStrategicModalOpen(false)}
       />
 
@@ -200,6 +204,14 @@ export const App: React.FC = () => {
         onClose={() => setIsSettingsModalOpen(false)}
       />
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 };
 

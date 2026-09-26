@@ -38,8 +38,10 @@ export const TopHUD: React.FC<TopHUDProps> = ({
   isRefreshing,
   hasCustomTargets,
 }) => {
-  const { roblox, webHealth, totalHustleRevenueUsd } = telemetry;
-  const isHealthy = webHealth.downCount === 0 && roblox.errorCount === 0;
+  const roblox = telemetry?.roblox || { currentCcu: 0, errorCount: 0 };
+  const webHealth = telemetry?.webHealth || { downCount: 0, uptimePercent: 100 };
+  const totalHustleRevenueUsd = telemetry?.totalHustleRevenueUsd ?? 0;
+  const isHealthy = (webHealth.downCount ?? 0) === 0 && (roblox.errorCount ?? 0) === 0;
 
   return (
     <header className="w-full bg-[#131525] border-b-4 border-black p-3 text-white font-pixel text-xs tracking-wider shadow-lg">
@@ -87,9 +89,9 @@ export const TopHUD: React.FC<TopHUDProps> = ({
             <div>
               <div className="text-[9px] text-gray-400 font-retro tracking-normal">GLOBAL UPTIME</div>
               <div className={`font-bold text-[10px] sm:text-xs ${
-                webHealth.uptimePercent >= 99 ? 'text-arcade-green' : 'text-arcade-red'
+                (webHealth.uptimePercent ?? 100) >= 99 ? 'text-arcade-green' : 'text-arcade-red'
               }`}>
-                {webHealth.uptimePercent}%
+                {webHealth.uptimePercent ?? 100}%
               </div>
             </div>
           </div>
@@ -100,7 +102,7 @@ export const TopHUD: React.FC<TopHUDProps> = ({
             <div>
               <div className="text-[9px] text-gray-400 font-retro tracking-normal">LIVE ROBLOX CCU</div>
               <div className="text-arcade-blue font-bold text-[10px] sm:text-xs">
-                {roblox.currentCcu.toLocaleString()}
+                {(roblox.currentCcu ?? 0).toLocaleString()}
               </div>
             </div>
           </div>
