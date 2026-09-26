@@ -6,7 +6,8 @@ import {
   Volume2,
   VolumeX,
   Tv,
-  Layers
+  Settings,
+  RotateCw
 } from 'lucide-react';
 import type { TelemetryState } from '../types/telemetry.ts';
 
@@ -18,6 +19,10 @@ interface TopHUDProps {
   onToggleCrt: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
+  onOpenSettings: () => void;
+  onRefreshLive: () => void;
+  isRefreshing: boolean;
+  hasCustomTargets: boolean;
 }
 
 export const TopHUD: React.FC<TopHUDProps> = ({
@@ -28,6 +33,10 @@ export const TopHUD: React.FC<TopHUDProps> = ({
   onToggleCrt,
   soundEnabled,
   onToggleSound,
+  onOpenSettings,
+  onRefreshLive,
+  isRefreshing,
+  hasCustomTargets,
 }) => {
   const { roblox, webHealth, totalHustleRevenueUsd } = telemetry;
   const isHealthy = webHealth.downCount === 0 && roblox.errorCount === 0;
@@ -43,7 +52,7 @@ export const TopHUD: React.FC<TopHUDProps> = ({
             <span className="font-bold text-arcade-cyan text-[11px] sm:text-xs">PIXEL STUDIO HQ</span>
           </div>
 
-          {/* Animated Green Beacon */}
+          {/* Animated Green/Red Beacon */}
           <div className="flex items-center gap-2 bg-black/60 px-2.5 py-1.5 border border-white/20">
             <span className="relative flex h-2.5 w-2.5">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
@@ -54,7 +63,7 @@ export const TopHUD: React.FC<TopHUDProps> = ({
               }`} />
             </span>
             <span className={`text-[9px] ${isHealthy ? 'text-green-400' : 'text-red-400'}`}>
-              {isHealthy ? 'ONLINE' : 'ALERT'}
+              {hasCustomTargets ? 'LIVE TARGETS' : isHealthy ? 'ONLINE' : 'ALERT'}
             </span>
           </div>
         </div>
@@ -97,18 +106,39 @@ export const TopHUD: React.FC<TopHUDProps> = ({
           </div>
         </div>
 
-        {/* Toggles & Options */}
+        {/* Action Controls */}
         <div className="flex items-center gap-2">
+          {/* Configure Targets Modal Trigger */}
+          <button
+            onClick={onOpenSettings}
+            title="Configure Your Real Roblox Experience & Websites"
+            className="px-2.5 py-1.5 bg-arcade-gold text-black border-2 border-black pixel-btn text-[10px] flex items-center gap-1.5 font-bold hover:bg-yellow-400"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span>SET TARGETS</span>
+          </button>
+
+          {/* Manual Refresh Button */}
+          <button
+            onClick={onRefreshLive}
+            disabled={isRefreshing}
+            title="Refresh Live Data"
+            className={`p-2 border-2 border-black pixel-btn text-[10px] flex items-center gap-1 ${
+              isRefreshing ? 'bg-gray-700 text-gray-400' : 'bg-arcade-cyan text-black hover:bg-cyan-300'
+            }`}
+          >
+            <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
+
           {/* CRT Toggle */}
           <button
             onClick={onToggleCrt}
             title="Toggle Retro CRT Scanlines"
             className={`p-2 border-2 border-black pixel-btn text-[10px] flex items-center gap-1 ${
-              crtEnabled ? 'bg-arcade-cyan text-black' : 'bg-[#2b2d42] text-gray-300'
+              crtEnabled ? 'bg-[#2b2d42] text-arcade-cyan border-arcade-cyan' : 'bg-[#2b2d42] text-gray-400'
             }`}
           >
             <Tv className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">CRT</span>
           </button>
 
           {/* Audio Toggle */}
@@ -116,23 +146,10 @@ export const TopHUD: React.FC<TopHUDProps> = ({
             onClick={onToggleSound}
             title="Toggle 8-Bit Chiptune Sound FX"
             className={`p-2 border-2 border-black pixel-btn text-[10px] flex items-center gap-1 ${
-              soundEnabled ? 'bg-arcade-green text-black' : 'bg-[#2b2d42] text-gray-300'
+              soundEnabled ? 'bg-arcade-green text-black' : 'bg-[#2b2d42] text-gray-400'
             }`}
           >
             {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-            <span className="hidden md:inline">SFX</span>
-          </button>
-
-          {/* Demo Mode Toggle */}
-          <button
-            onClick={onToggleDemoMode}
-            title="Toggle Demo vs Live Data"
-            className={`px-2.5 py-1.5 border-2 border-black pixel-btn text-[10px] flex items-center gap-1.5 ${
-              isDemoMode ? 'bg-arcade-gold text-black' : 'bg-arcade-purple text-white'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>{isDemoMode ? 'DEMO' : 'LIVE'}</span>
           </button>
         </div>
 
