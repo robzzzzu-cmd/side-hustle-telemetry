@@ -3,9 +3,9 @@
   "roblox": {
     "universeId": "10766029183",
     "placeName": "Build your AI Datacentre",
-    "currentCcu": 1,
-    "dailyVisits": 24,
-    "totalVisits": 920,
+    "currentCcu": 2,
+    "dailyVisits": 48,
+    "totalVisits": 990,
     "avgVisitDurationSeconds": 610,
     "estimatedD1Retention": 17.8,
     "robuxRevenueDaily": 3200,
@@ -13,7 +13,7 @@
     "activeServerCount": 1,
     "crashRatePercent": 0.05,
     "isMock": false,
-    "collectedAt": "2026-09-30T06:06:33.342Z"
+    "collectedAt": "2026-09-30T13:07:26.798Z"
   },
   "webHealth": {
     "endpoints": [
@@ -21,21 +21,21 @@
         "url": "https://www.tradeopportunities.trade/#opportunities",
         "status": "HEALTHY",
         "statusCode": 200,
-        "responseTimeMs": 521,
+        "responseTimeMs": 620,
         "sslValid": true,
-        "sslDaysRemaining": 60,
+        "sslDaysRemaining": 59,
         "sslExpiryDate": "2026-11-29T08:48:09.000Z",
         "error": null,
-        "timestamp": "2026-09-30T06:06:33.584Z"
+        "timestamp": "2026-09-30T13:07:27.165Z"
       }
     ],
     "totalMonitored": 1,
     "healthyCount": 1,
     "degradedCount": 0,
     "downCount": 0,
-    "avgLatencyMs": 521,
+    "avgLatencyMs": 620,
     "hasOutages": false,
-    "collectedAt": "2026-09-30T06:06:33.584Z",
+    "collectedAt": "2026-09-30T13:07:27.165Z",
     "uptimePercent": 100
   },
   "searchConsole": {
@@ -116,7 +116,7 @@
         "recommendedAction": "Rewrite <title> with high-intent hook and update meta description to target >3.0% CTR (Currently 1.4% on 980 imp)."
       }
     ],
-    "collectedAt": "2026-09-30T06:06:33.029Z",
+    "collectedAt": "2026-09-30T13:07:26.488Z",
     "isMock": true
   },
   "growthAudit": {
