@@ -5,7 +5,7 @@
     "placeName": "Build your AI Datacentre",
     "currentCcu": 0,
     "dailyVisits": 0,
-    "totalVisits": 1883,
+    "totalVisits": 1884,
     "avgVisitDurationSeconds": 610,
     "estimatedD1Retention": 17.8,
     "robuxRevenueDaily": 3200,
@@ -13,7 +13,7 @@
     "activeServerCount": 0,
     "crashRatePercent": 0.05,
     "isMock": false,
-    "collectedAt": "2026-11-04T03:42:51.318Z"
+    "collectedAt": "2026-11-04T11:41:36.995Z"
   },
   "webHealth": {
     "endpoints": [
@@ -21,21 +21,21 @@
         "url": "https://www.tradeopportunities.trade/#opportunities",
         "status": "HEALTHY",
         "statusCode": 200,
-        "responseTimeMs": 304,
+        "responseTimeMs": 434,
         "sslValid": true,
         "sslDaysRemaining": 87,
         "sslExpiryDate": "2027-01-31T01:25:29.000Z",
         "error": null,
-        "timestamp": "2026-11-04T03:42:51.486Z"
+        "timestamp": "2026-11-04T11:41:37.333Z"
       }
     ],
     "totalMonitored": 1,
     "healthyCount": 1,
     "degradedCount": 0,
     "downCount": 0,
-    "avgLatencyMs": 304,
+    "avgLatencyMs": 434,
     "hasOutages": false,
-    "collectedAt": "2026-11-04T03:42:51.486Z",
+    "collectedAt": "2026-11-04T11:41:37.333Z",
     "uptimePercent": 100
   },
   "searchConsole": {
@@ -116,7 +116,7 @@
         "recommendedAction": "Rewrite <title> with high-intent hook and update meta description to target >3.0% CTR (Currently 1.4% on 980 imp)."
       }
     ],
-    "collectedAt": "2026-11-04T03:42:51.013Z",
+    "collectedAt": "2026-11-04T11:41:36.589Z",
     "isMock": true
   },
   "growthAudit": {
