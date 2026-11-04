@@ -13,7 +13,7 @@
     "activeServerCount": 0,
     "crashRatePercent": 0.05,
     "isMock": false,
-    "collectedAt": "2026-11-03T23:45:10.965Z"
+    "collectedAt": "2026-11-04T03:42:51.318Z"
   },
   "webHealth": {
     "endpoints": [
@@ -21,21 +21,21 @@
         "url": "https://www.tradeopportunities.trade/#opportunities",
         "status": "HEALTHY",
         "statusCode": 200,
-        "responseTimeMs": 173,
+        "responseTimeMs": 304,
         "sslValid": true,
-        "sslDaysRemaining": 88,
+        "sslDaysRemaining": 87,
         "sslExpiryDate": "2027-01-31T01:25:29.000Z",
         "error": null,
-        "timestamp": "2026-11-03T23:45:10.936Z"
+        "timestamp": "2026-11-04T03:42:51.486Z"
       }
     ],
     "totalMonitored": 1,
     "healthyCount": 1,
     "degradedCount": 0,
     "downCount": 0,
-    "avgLatencyMs": 173,
+    "avgLatencyMs": 304,
     "hasOutages": false,
-    "collectedAt": "2026-11-03T23:45:10.936Z",
+    "collectedAt": "2026-11-04T03:42:51.486Z",
     "uptimePercent": 100
   },
   "searchConsole": {
@@ -116,7 +116,7 @@
         "recommendedAction": "Rewrite <title> with high-intent hook and update meta description to target >3.0% CTR (Currently 1.4% on 980 imp)."
       }
     ],
-    "collectedAt": "2026-11-03T23:45:10.523Z",
+    "collectedAt": "2026-11-04T03:42:51.013Z",
     "isMock": true
   },
   "growthAudit": {
